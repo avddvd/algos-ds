@@ -1,6 +1,10 @@
 package tree
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/avddvd/algos-ds/queue"
+	"math"
+)
 
 type Tree struct {
 	root *Node
@@ -36,4 +40,112 @@ func PrintPostOrder(root *Node) {
 		PrintPostOrder(root.GetRight())
 		fmt.Println(root.GetData())
 	}
+}
+
+func (n *Node) FindMin() *Node {
+	for n.GetLeft() != nil {
+		n = n.GetLeft()
+	}
+	return n
+}
+
+func (n *Node) FindMax() *Node {
+	for n.GetRight() != nil {
+		n = n.GetRight()
+	}
+	return n
+}
+
+func (n *Node) Search(data int) bool {
+	found := false
+	if n.GetData().(int) == data {
+		found = true
+	} else {
+		if n.GetData().(int) > data {
+			found = n.GetLeft().Search(data)
+		} else {
+			found = n.GetRight().Search(data)
+		}
+	}
+	return found
+}
+
+func (n *Node) Insert(node *Node) {
+	var p *Node
+	data := node.GetData().(int)
+	for n != nil {
+		if n.GetData().(int) < data {
+			p = n
+			n = n.GetRight()
+		} else {
+			p = n
+			n = n.GetLeft()
+		}
+	}
+	if data < p.GetData().(int) && p.GetLeft() == nil {
+		p.SetLeft(node)
+	} else if p.GetRight() == nil {
+		p.SetRight(node)
+	}
+}
+
+func IsBSTHelper(node *Node, min, max int) bool {
+	if node == nil {
+		return true
+	}
+	return node.GetIntData() < max &&
+		node.GetIntData() > min &&
+		IsBSTHelper(node.GetLeft(), min, node.GetIntData()) &&
+		IsBSTHelper(node.GetRight(), node.GetIntData(), max)
+}
+
+func (n *Node) IsBST() bool {
+	if n == nil {
+		return true
+	}
+	min, max := math.MinInt64, math.MaxInt64
+	return IsBSTHelper(n, min, max)
+}
+
+func SerializeHelper(node *Node, s []int) []int {
+	if node == nil {
+		return s
+	}
+	s = append(s, node.GetIntData())
+	s = SerializeHelper(node.GetLeft(), s)
+	s = SerializeHelper(node.GetRight(), s)
+	return s
+}
+
+func (n *Node) Serialize() []int {
+	s := []int{}
+	return SerializeHelper(n, s)
+}
+
+func DeserializeHelper(q *queue.Queue, min, max int) (n *Node) {
+	if q.IsEmpty() {
+		return
+	}
+	if q.Peek() > min && q.Peek() < max {
+		data := q.Dequeue().GetData().(int)
+		n = NewNode(data)
+		left := DeserializeHelper(q, min, data)
+		if left != nil {
+			n.left = left
+		}
+		right := DeserializeHelper(q, data, max)
+		if right != nil {
+			n.right = right
+		}
+	}
+	return
+}
+
+func Deserialize(list []int) *Node {
+	min, max := math.MinInt64, math.MaxInt64
+	q := new(queue.Queue)
+	for _, item := range list {
+		q.Enqueue(item)
+	}
+	return DeserializeHelper(q, min, max)
 }

@@ -16,12 +16,12 @@ func (n *Node) SetData(data interface{}) {
 	n.data = data
 }
 
-func (n *Node) SetLeft(node *Node) {
-	n.left = node
+func (n *Node) SetLeft(left *Node) {
+	n.left = left
 }
 
-func (n *Node) SetRight(node *Node) {
-	n.right = node
+func (n *Node) SetRight(right *Node) {
+	n.right = right
 }
 
 func (n *Node) GetLeft() *Node {
@@ -34,4 +34,8 @@ func (n *Node) GetRight() *Node {
 
 func (n *Node) GetData() interface{} {
 	return n.data
+}
+
+func (n *Node) GetIntData() int {
+	return n.data.(int)
 }

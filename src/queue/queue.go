@@ -50,3 +50,14 @@ func (q *Queue) Size() int {
 	}
 	return sum
 }
+
+func (q *Queue) Peek() int {
+	curr := q.head
+	if curr == nil {
+		return 0
+	}
+	for curr != nil && curr.GetNext() != nil {
+		curr = curr.GetNext()
+	}
+	return curr.GetData().(int)
+}
