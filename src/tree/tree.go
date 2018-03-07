@@ -149,3 +149,39 @@ func Deserialize(list []int) *Node {
 	}
 	return DeserializeHelper(q, min, max)
 }
+
+func FindSuccessor(root, node *Node) *Node {
+	var succ *Node
+	if node.GetRight() != nil {
+		return node.GetRight().FindMin()
+	}
+	for root != nil {
+		if node.GetIntData() < root.GetIntData() {
+			succ = root
+			root = root.GetLeft()
+		} else if node.GetIntData() > root.GetIntData() {
+			root = root.GetRight()
+		} else {
+			break
+		}
+	}
+	return succ
+}
+
+func FindPredecessor(root, node *Node) *Node {
+	var preDec *Node
+	if node.GetLeft() != nil {
+		return node.GetLeft().FindMax()
+	}
+	for root != nil {
+		if node.GetIntData() < root.GetIntData() {
+			root = root.GetLeft()
+		} else if node.GetIntData() > root.GetIntData() {
+			preDec = root
+			root = root.GetRight()
+		} else {
+			break
+		}
+	}
+	return preDec
+}

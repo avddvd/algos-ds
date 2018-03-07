@@ -55,3 +55,20 @@ func TestSerilaize(t *testing.T) {
 		t.Error("error deserializing tree")
 	}
 }
+
+func TestSuccessorAndPredec(t *testing.T) {
+	n := NewNode(10)
+	for _, val := range []int{1, 2, 4, -1, 0} {
+		node := NewNode(val)
+		n.Insert(node)
+	}
+	n1 := NewNode(15)
+	n2 := NewNode(-15)
+	n.Insert(n1)
+	n.Insert(n2)
+	PrintInOrder(n)
+	s := FindSuccessor(n, n2)
+	p := FindPredecessor(n, n1)
+	fmt.Println(s.GetIntData(), p.GetIntData())
+
+}
