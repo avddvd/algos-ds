@@ -39,3 +39,20 @@ func Anagram(src, dst string) bool {
 	}
 	return true
 }
+
+func MaxProfit(prices []int) (int, int, int) {
+	buy, sell := 0, 0
+	maxProfit := -1
+	i := 0
+	for i < len(prices) {
+		if prices[i] < prices[buy] {
+			buy = i
+		}
+		if prices[i]-prices[buy] > maxProfit {
+			maxProfit = prices[i] - prices[buy]
+			sell = i
+		}
+		i += 1
+	}
+	return buy, sell, maxProfit
+}
