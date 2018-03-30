@@ -7,11 +7,8 @@ import (
 
 func TestGraph(t *testing.T) {
 	g := NewGraph()
-	node1 := NewNode(1)
-	node2 := NewNode(2)
-	g.AddEdge(node1, node2, 10)
+	node1 := g.AddEdge(1, 2, 10)
 	nodes := g.GetNodes()
-	nbrs := node1.GetNeighbors()
 	if len(nodes) == 0 {
 		t.Error("error adding edge to graph")
 	}
@@ -20,20 +17,36 @@ func TestGraph(t *testing.T) {
 			t.Error("error adding node/edge to graph")
 		}
 	}
-	if len(nbrs) == 0 {
-		t.Error("error adding neighbors/edges")
-	}
 
 	visited := map[*Node]bool{}
-	dfs(node1, visited)
+	DFS(node1, visited)
 	if len(visited) == 0 {
-		t.Error("error in dfs of a node")
+		t.Error("error in DFS of a node")
 	}
-	fmt.Println(visited)
 	visited = map[*Node]bool{}
-	bfs(node1, visited)
+	BFS(node1, visited)
 	if len(visited) == 0 {
-		t.Error("error in dfs of a node")
+		t.Error("error in DFS of a node")
 	}
-	fmt.Println(visited)
+}
+
+func TestTopologicalSort(t *testing.T) {
+	g := NewGraph()
+	g.AddEdge(5, 2, 0)
+	g.AddEdge(5, 0, 0)
+	g.AddEdge(4, 0, 0)
+	g.AddEdge(4, 1, 0)
+	g.AddEdge(2, 3, 0)
+	g.AddEdge(3, 1, 0)
+	s := g.TopologicalSort()
+	for value, node := range g.GetNodes() {
+		for nbr := range node.GetNeighbors() {
+			fmt.Printf("%d -> %d \n", value, nbr.GetIntData())
+		}
+	}
+	fmt.Println(s)
+	for !s.IsEmpty() {
+		n := s.Pop().GetData().(*Node)
+		fmt.Println(n.GetIntData())
+	}
 }
